@@ -37,11 +37,13 @@ console.log("Before Validating ===> ", req.params)
     return next();
 }
 exports.delete =   (req, res, next) => {
+
     const schema = Joi.object( {
         id: Joi.string().min(8).required(),
+        uid: Joi.string().min(8).required()
     })
-
-    const {error,value} = schema.validate(req.body)
+console.log("Before Validating ===> ", req.params)
+    const {error,value} = schema.validate(req.params)
     console.log("After validating",value)
     if(error){
         return createErrorResponse(res, error.details[0].message.replace(/['"]/g,''), 422);

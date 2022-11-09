@@ -15,11 +15,34 @@ console.log('task', task)
     return { data: { task }};
   
 } 
-exports.delete = async ({id, user_id}) => {}
-exports.getAll = async({user_id})=>{
+exports.delete = async ({id,uid: user_id}) => {
+    console.log("19: id", id, "uid", user_id)
+    const task = await Tasks.findOneAndDelete({_id: id, user_id});
+    console.log("task", task)
+    if(!task) return {error: "task not found"};
+    return {data: 'deleted'};
 
 }
-exports.getOne = async({id, user_id})=>{
+exports.getAll = async({user_id, query: pqeury})=>{
+    console.log(user_id, pqeury)
+    let {page, limit} = pqeury;
+    page = parseInt(page);
+	limit = parseInt(limit);
+	const query = {
+		page,
+		limit,
+		sort: {
+			createdAt: -1,
+		}
+	};
+    const tasks = await Tasks.paginate({user_id}, query);
+    return {data: tasks};
+
+}
+exports.getOne = async({user_id,id })=>{
+    const task = await Tasks.findOne({_id: id, user_id});
+    if(!task) return {error: "task not found"};
+    return {data: task};
 }
 
 exports.create = async ({title, description, time, status, user_id}) => {
