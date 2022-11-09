@@ -6,7 +6,7 @@ exports.create = async (req, res) => {
 
         const { error, data } = await taskService.create(payload);
         if (error) return createErrorResponse(res, error, 400);
-        return createSuccessResponse(res, data, 200, "login success");
+        return createSuccessResponse(res, data, 200, "Task queued");
 
     } catch (err) {
         console.log(err)

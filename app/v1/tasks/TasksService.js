@@ -47,10 +47,12 @@ exports.getOne = async({user_id,id })=>{
 
 exports.create = async ({title, description, time, status, user_id}) => {
 try{
- 
-    const newTask = new Tasks({ title, description, time, status, user_id});
-    await newTask.save();
-    return {data: newTask };
+ const message ={text: {title, description, time, status, user_id}};
+    // const newTask = new Tasks({ title, description, time, status, user_id});
+ await send('incoming', message);
+
+    // await newTask.save();
+    return {data : message };
 }
 catch(error){
     return {error: error}

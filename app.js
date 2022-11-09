@@ -11,6 +11,7 @@ const moment = require("moment");
 global.isProduction = process.env.NODE_ENV == "production";
 
 require("./app/helper");
+require("./startups/queue");
 
 require("express-async-errors");
 
