@@ -2,7 +2,7 @@
 require("dotenv").config({});
 const createError = require('http-errors');
 // var bodyParser = require('body-parser');
-
+const debug = require("debug")("app:app");
 let express = require('express');
 let app = express();
 const moment = require("moment");
@@ -11,24 +11,17 @@ const moment = require("moment");
 global.isProduction = process.env.NODE_ENV == "production";
 
 require("./app/helper");
-const {formatPhoneFromRequest} = require("./app/helper");
 
 require("express-async-errors");
 
 require("./startups")(app, express);
-
-// app.use(bodyParser.text());
-//some helpers
-
-app.use(formatPhoneFromRequest);
-
 
 app.use((req, res, next) => {
     let requestId = getTimestamp();
     console.log("Time Started", moment().toISOString(true), "headers", req.headers);
     let url = req.protocol + '://' + req.get('host') + req.originalUrl;
     console.log("Response",requestId);
-    graylog.debug(`[${requestId}] Request ${url}`, {
+    debug(`[${requestId}] Request ${url}`, {
         type: "request-response",
         requestId,
         body: req.body,
@@ -47,7 +40,7 @@ app.use((req, res, next) => {
         console.log("Response", requestId);
         console.log("Time Ended", moment().toISOString(true));
         cleanup();
-        graylog.debug( `[${requestId}] Response ${url}`,`${res.statusCode} ${res.statusMessage};`, {
+        debug( `[${requestId}] Response ${url}`,`${res.statusCode} ${res.statusMessage};`, {
             type: "request-response",
             body: req.body,
             query: req.query,
@@ -62,7 +55,7 @@ app.use((req, res, next) => {
     const abortFn = () => {
         cleanup();
         console.log("Time Ended", moment().toISOString(true));
-        graylog.debug( `Response ${url}`,`${res.statusCode} ${res.statusMessage}; ${res.get('Content-Length') || 0}b sent || Request aborted by the client`, {
+       debug( `Response ${url}`,`${res.statusCode} ${res.statusMessage}; ${res.get('Content-Length') || 0}b sent || Request aborted by the client`, {
             type: "request-response",
             body: req.body,
             query: req.query,
@@ -76,7 +69,7 @@ app.use((req, res, next) => {
     const errorFn = err => {
         cleanup();
         console.log("Time Ended Error", moment().toISOString(true));
-        graylog.debug( `Response ${url}`,`${res.statusCode} ${res.statusMessage}; ${res.get('Content-Length') || 0}b sent || Request pipeline error: ${err}`, {
+        debug( `Response ${url}`,`${res.statusCode} ${res.statusMessage}; ${res.get('Content-Length') || 0}b sent || Request pipeline error: ${err}`, {
             type: "request-response",
             body: req.body,
             query: req.query,
@@ -95,7 +88,7 @@ app.use((req, res, next) => {
 //routes
 
 
-app.use("/", require("./routes/home"));
+// app.use("/", require("./routes/home"));
 app.use("/api/v1", require("./routes/v1"));
 
 // catch 404 and forward to error handler
@@ -108,7 +101,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     // set locals, only providing error in development
     console.log("error", {err});
-    logger(err.message, err, {
+    debug(err.message, err, {
         request: {
             url: req.url|| {} ,
             body: req.body || {},
