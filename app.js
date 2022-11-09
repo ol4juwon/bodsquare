@@ -1,17 +1,39 @@
-"use strict";
+
 require("dotenv").config({});
 const createError = require('http-errors');
+const http = require('http');
 // var bodyParser = require('body-parser');
 const debug = require("debug")("app:app");
 let express = require('express');
 let app = express();
+const server = http.createServer(app);
 const moment = require("moment");
-
-
-global.isProduction = process.env.NODE_ENV == "production";
-
+// let io = require('socket.io');
+const socketio = require('socket.io');
+const io = socketio(server,
+    {
+        transport:['polling'],
+        cors: {
+            cors:{
+                origin: "*",
+            }}
+    }
+    )
+    io.on('connection', (socket) => {
+        console.log('A user is connected');
+      
+        socket.on('newTask', (message) => {
+          console.log(`message from ${socket.id} : ${message}`);
+        })
+      
+        socket.on('disconnect', () => {
+          console.log(`socket ${socket.id} disconnected`);
+        })
+      })
+// global.isProduction = process.env.NODE_ENV == "production";
+exports =  { io};
 require("./app/helper");
-require("./startups/queue");
+// require("./startups/queue");
 
 require("express-async-errors");
 
@@ -114,5 +136,6 @@ app.use((err, req, res, next) => {
     res.status(err && err.status || 500);
     res.send({error: err && err.message || "An error occurred"});
 });
+server.listen(5454, () => console.log('listening on port 3000'))
 
-module.exports = app;
+module.exports = app, server;
