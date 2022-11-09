@@ -1,6 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const debug  = require("debug")("app:debug")
 let mongoosePaginate = require('mongoose-paginate');
 
 const schema = mongoose.Schema({
@@ -21,7 +22,7 @@ const schema = mongoose.Schema({
 });
 
 schema.post('save', function(task) {
-    console.log("POST save", task);
+    debug("POST save", task);
 });
 
 schema.index({"$**": "text"});

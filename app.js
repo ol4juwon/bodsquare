@@ -8,32 +8,8 @@ let express = require('express');
 let app = express();
 const server = http.createServer(app);
 const moment = require("moment");
-// let io = require('socket.io');
-const socketio = require('socket.io');
-const io = socketio(server,
-    {
-        transport:['polling'],
-        cors: {
-            cors:{
-                origin: "*",
-            }}
-    }
-    )
-    io.on('connection', (socket) => {
-        console.log('A user is connected');
-      
-        socket.on('newTask', (message) => {
-          console.log(`message from ${socket.id} : ${message}`);
-        })
-      
-        socket.on('disconnect', () => {
-          console.log(`socket ${socket.id} disconnected`);
-        })
-      })
-// global.isProduction = process.env.NODE_ENV == "production";
-exports =  { io};
+global.isProduction = process.env.NODE_ENV == "production";
 require("./app/helper");
-// require("./startups/queue");
 
 require("express-async-errors");
 
@@ -111,7 +87,6 @@ app.use((req, res, next) => {
 //routes
 
 
-// app.use("/", require("./routes/home"));
 app.use("/api/v1", require("./routes/v1"));
 
 // catch 404 and forward to error handler
@@ -136,6 +111,5 @@ app.use((err, req, res, next) => {
     res.status(err && err.status || 500);
     res.send({error: err && err.message || "An error occurred"});
 });
-server.listen(5454, () => console.log('listening on port 3000'))
 
-module.exports = app, server;
+module.exports = app;
