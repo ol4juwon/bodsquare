@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <script src="https://cdn.socket.io/4.5.3/socket.io.min.js" ></script>
+
+        <script>
+            var option = {
+                reconnect: false,
+                'try multiple transports': false,
+                trabsports: ['websocket']
+            }
+            var socket = io.connect('localhost:5454', option);
+            socket.emit('newTask',{"title":"ola", "description":"dddddd", "user_id": "636bb094543d012548a37efb","time": "ddrjlkrkrkk"})
+        </script>
+    </body>
+</html>

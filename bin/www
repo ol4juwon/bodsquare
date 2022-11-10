@@ -3,6 +3,7 @@
 /**
  * Module dependencies.
  */
+ let express = require('express');
  const app = require("../app.js");
  const debug  = require("debug")("app:debug")
  const http = require('http');
@@ -44,10 +45,10 @@
  
      const port = normalizePort(process.env.PORT || '4000');
      app.set('port', port);
+     app.use(express.static('public'))
      debug("Starting up Products", port, process.env.APP_NAME);
  
      debug("Init cron", process.env.NODE_ENV);
- 
      server.listen(port);
      server.setTimeout(500000);
      server.on('error', (error) => {
