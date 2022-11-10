@@ -4,6 +4,8 @@
 
     </head>
     <body>
+
+        <h2>Bodsquare</h2>
         <script src="https://cdn.socket.io/4.5.3/socket.io.min.js" ></script>
 
         <script>
@@ -14,6 +16,9 @@
             }
             var socket = io.connect('localhost:5454', option);
             socket.emit('newTask',{"title":"ola", "description":"dddddd", "user_id": "636bb094543d012548a37efb","time": "ddrjlkrkrkk"})
+            socket.on('done', (task)=> {
+                alert(`task created ${JSON.stringify(task)}`);
+            })
         </script>
     </body>
 </html>

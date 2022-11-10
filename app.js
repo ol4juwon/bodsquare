@@ -21,7 +21,9 @@ io.on('connection', (socket) => {
     socket.on('newTask', (message) => {
         console.log('message from', message);
         send('newTask', message)
+        socket.emit('done',message)
     })
+
 })
 
 app.use(express.json());
