@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bodsquare-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bodsqaure
+  template:
+    metadata:
+      labels:
+        app: bodsquare
+    spec:
+      containers:
+        - name: bodsquare
+          image: olajuwon/bodsquare
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bodsquare-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: bodsquare
+  ports:
+    - name: bodsquare
+      protocol: TCP
+      port: 4000
+      targetPort: 4000

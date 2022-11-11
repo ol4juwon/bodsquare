@@ -1,5 +1,6 @@
 const debug = require("debug")("app:app");
 const authservice = require('../app/v1/auth/AuthService')
+const taskService = require('../app/v1/tasks/TasksService')
 module.exports =async (server) => {
     var io = require('socket.io')(server,  {
         cors: {
@@ -20,12 +21,16 @@ module.exports =async (server) => {
             console.log('task', task)
         })
         socket.on('login',async ({loginData})=> {
-            console.log('logindata',loginData )
             const {email, password } = loginData;
             const {error, data} = await authservice.login({email, password})
-            console.log('error', error,'data', data);
-            if(data)
-            socket.emit('loginSuccess', data)
+            
+            if(data){
+                const tasksss = await taskService.getAll({user_id: data.user_id})
+                data.socketid = socket.id;
+                socket.emit('loginSuccess', data)
+                socket.emit('tasks', {data: tasksss.data.docs})
+
+            }
             if(error)
             socket.emit('loginError', error);
 

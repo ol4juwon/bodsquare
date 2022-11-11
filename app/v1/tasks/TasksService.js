@@ -23,19 +23,26 @@ exports.delete = async ({id,uid: user_id}) => {
     return {data: 'deleted'};
 
 }
-exports.getAll = async({user_id, query: pqeury})=>{
-    console.log(user_id, pqeury)
-    let {page, limit} = pqeury;
-    page = parseInt(page);
-	limit = parseInt(limit);
-	const query = {
-		page,
-		limit,
-		sort: {
-			createdAt: -1,
-		}
-	};
+exports.getAll = async({user_id, query})=>{
+    console.log(user_id, query)
+    if(!query){
+    query = {
+            page : 1,
+            limit:10,
+            sort: {
+                createdAt: -1,
+            }
+        };
+    }else{
+        query.page = parseInt(query.page);
+        query.limit = parseInt(query.limit);
+    }
+    // let {page, limit} = query;
+    // page = parseInt(page);
+	// limit = parseInt(limit);
+
     const tasks = await Tasks.paginate({user_id}, query);
+    // console.log(tasks)
     return {data: tasks};
 
 }

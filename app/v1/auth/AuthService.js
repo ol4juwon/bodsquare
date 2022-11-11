@@ -21,7 +21,7 @@ exports.login = async ({email, password}) => {
 			expiresIn: "48h",
 		}
 	);
-    return { data: { token }};
+    return { data: { user_id: user._id, token }};
   
 } 
 
