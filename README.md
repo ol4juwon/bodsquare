@@ -1,5 +1,5 @@
 # Task List
-a task app using socketio for events and rabbitmq for queueing.
+A task app using socketio for events and rabbitmq for queueing.
 ## Hosted on Heroku 
 [Task]()
 
