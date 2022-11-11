@@ -7,37 +7,17 @@ var bodyParser = require('body-parser');
 const debug = require("debug")("app:app");
 let express = require('express');
 let app = express();
+const cors = require('cors')
 // const moment = require("moment");
 require("./app/helper");
-
 require("express-async-errors");
-
-require("./startups")(app, express);
 const server = require('http').createServer(app);
-var io = require('socket.io')(server);
-io.on('connection', (socket) => {
-    debug('a user is connected', socket.id)
-
-    socket.on('newTask', (message) => {
-        console.log('message from', message);
-        send('newTask', message)
-        socket.emit('done',message)
-    })
-
-})
+require("./startups")(app, express, server);
 
 app.use(express.json());
+
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}))
-app.get('/', (req,res) => {
-try{
-    res.render('index.html')
-
-}catch(err){
-    console.log("ll ", err.message)
-    res.send("ok")
-}
-})
 app.use("/api/v1", require("./routes/v1"));
 
 // catch 404 and forward to error handler
@@ -64,7 +44,8 @@ app.use((err, req, res, next) => {
 });
 
 // module.exports = app;
-
 server.listen(5454, () => {
     console.log('listening')
 })
+
+module.exports= app;

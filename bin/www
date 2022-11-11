@@ -49,7 +49,7 @@
      debug("Starting up Products", port, process.env.APP_NAME);
  
      debug("Init cron", process.env.NODE_ENV);
-     server.listen(port);
+    //  server.listen(port);
      server.setTimeout(500000);
      server.on('error', (error) => {
          onError(error, port)
